@@ -19,9 +19,10 @@ func main() {
 	check(err)
 	icon := fyne.NewStaticResource("icon",image)
 	application.SetIcon(icon)
-	w := application.NewWindow("Hello")
+	w := application.NewWindow("MRS Launcher")
 	w.SetContent(widget.NewVBox(
 		widget.NewLabel("Hello Fyne!"),
+		widget.NewButtonWithIcon("테스트",icon,func()),
 		widget.NewButton("Quit", func() {
 			application.Quit()
 		}),
