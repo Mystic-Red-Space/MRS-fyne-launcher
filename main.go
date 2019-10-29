@@ -20,15 +20,15 @@ func main() {
 	icon := fyne.NewStaticResource("icon",image)
 	application.SetIcon(icon)
 	w := application.NewWindow("MRS Launcher")
-	w.SetContent(widget.NewVBox(
-		widget.NewLabel("Hello Fyne!"),
-		widget.NewButtonWithIcon("Test",icon, func() {
+	w.SetContent(widget.NewHBox(
+		widget.NewVBox(widget.NewButtonWithIcon("Test",icon, func() {
 			if w.FullScreen() {
 				w.SetFullScreen(false)
 			} else {
 				w.SetFullScreen(true)
 			}
-		}),
+		})),
+		widget.NewLabel("Hello Fyne!"),
 		widget.NewButton("Quit", func() {
 			application.Quit()
 		}),
