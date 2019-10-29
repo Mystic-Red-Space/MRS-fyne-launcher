@@ -22,7 +22,13 @@ func main() {
 	w := application.NewWindow("MRS Launcher")
 	w.SetContent(widget.NewVBox(
 		widget.NewLabel("Hello Fyne!"),
-		widget.NewButtonWithIcon("Test",icon, func() {}),
+		widget.NewButtonWithIcon("Test",icon, func() {
+			if w.FullScreen() {
+				w.SetFullScreen(false)
+			} else {
+				w.SetFullScreen(true)
+			}
+		}),
 		widget.NewButton("Quit", func() {
 			application.Quit()
 		}),
