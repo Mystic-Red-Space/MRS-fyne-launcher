@@ -1,2 +1,8 @@
 language: go
 script: xgo -v
+before-install:
+ - sudo apt-get -y install libgl1-mesa-dev xorg-dev
+ - go get -u -v github.com/karalabe/xgo
+addons:
+  apt:
+    update: true
