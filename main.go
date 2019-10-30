@@ -26,6 +26,7 @@ func main() {
 	var modpacklist []modpack
 	res, _ := ioutil.ReadAll(resp.Body)
 	_ = json.Unmarshal(res, &modpacklist)
+	temper, _ := json.Marshal(modpacklist) 
 	application := app.New()
 	image, err := ioutil.ReadFile("icon.png")
 	check(err)
@@ -40,7 +41,7 @@ func main() {
 				w.SetFullScreen(true)
 			}
 		})),
-		widget.NewLabel("Hello Fyne!"),
+		widget.NewLabel(string(temper)),
 		widget.NewButton("Quit", func() {
 			application.Quit()
 		}),
