@@ -1,9 +1,0 @@
-language: go
-before-install:
- - go get -u -v github.com/karalabe/xgo
-addons:
-  apt:
-    update: true
-    packages:
-    - libgl1-mesa-dev
-    - xorg-dev
