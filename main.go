@@ -1,7 +1,6 @@
 package main
 
 import (
-    "fmt"
     "encoding/json"
     "fyne.io/fyne/app"
     "fyne.io/fyne/widget"
@@ -38,19 +37,17 @@ func main() {
 	    modpacknames = append(modpacknames, modp.Name)
 	}
     application := app.New()
+    application.SetIcon(resourceIconPng)
     w := application.NewWindow("MRS Launcher")
     w.SetContent(widget.NewHBox(
         widget.NewVBox(
-        widget.NewSelect(modpacknames, func(item string) {
-            fmt.Println(item)
-        }),
-        widget.NewButton("Test", func() {
-            if w.FullScreen() {
-                w.SetFullScreen(false)
-            } else {
-                w.SetFullScreen(true)
-            }
-        })),
+            widget.NewSelect(modpacknames, func(item string) {
+                widget.Box(w.Content()).Children[2].SetText(item)
+            }),
+            widget.NewButton("Test", func() {
+                    w.SetFullScreen(!w.FullScreen())
+                }
+            })),
         widget.NewLabel("Hello world"),
         widget.NewButton("Quit", func() {
             application.Quit()
