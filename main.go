@@ -9,10 +9,17 @@ import (
 	"net/http"
 )
 
+type mcfile struct {
+	Name string `json:"name"`
+	Dir string `json:"dir"`
+	Url string `json:"url"`
+	Md5 string `json:"md5"`
+}
+
 type modpack struct {
-		Name string `json:"name"`
-		Icon string `json:"icon"`
-		Profile string `json:"profile"`
+	Name string `json:"name"`
+	Icon string `json:"icon"`
+	Profile string `json:"profile"`
 }
 
 func check(e error) {

@@ -2,3 +2,5 @@ pkg/
 src/
 bin/
 output/
+/MRS-fyne-launcher.exe
+/main.exe
