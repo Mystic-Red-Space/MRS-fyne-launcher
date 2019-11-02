@@ -30,10 +30,12 @@ func check(e error) {
 
 func main() {
 	resp, err := http.Get("https://api.mysticrs.tk/list")
-	var modpacklist []modpack
+	var modpacks []modpack
+        var modpacknames []string
 	res, _ := ioutil.ReadAll(resp.Body)
-	_ = json.Unmarshal(res, &modpacklist)
-	temper, _ := json.MarshalIndent(modpacklist,"","  ") 
+	_ = json.Unmarshal(res, &modpacks)
+        for _, modp := range modpacks {
+        }
 	application := app.New()
 	image, err := ioutil.ReadFile("icon.png")
 	check(err)
@@ -48,7 +50,7 @@ func main() {
 				w.SetFullScreen(true)
 			}
 		})),
-		widget.NewLabel(string(temper)),
+		widget.NewLabel("Hello world"),
 		widget.NewButton("Quit", func() {
 			application.Quit()
 		}),
