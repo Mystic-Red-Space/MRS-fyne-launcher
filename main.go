@@ -2,13 +2,20 @@ package main
 
 import (
     "encoding/json"
-    "fmt"
+	"fyne.io/fyne"
     "fyne.io/fyne/app"
     "fyne.io/fyne/widget"
     "io/ioutil"
     "net/http"
 )
 
+type launcher struct {
+	functions map[string]func()
+	modpacks  *widget.Select
+	output    *widget.Label
+	buttons   map[string]*widget.Button
+	window    fyne.Window
+}
 type mcfile struct {
     Name string `json:"name"`
     Dir string `json:"dir"`
@@ -28,31 +35,34 @@ func check(e error) {
     }
 }
 
-func main() {
-    resp, _ := http.Get("https://api.mysticrs.tk/list")
-    var modpacks []modpack
-    modpacknames := make([]string, 0, 5)
-    res, _ := ioutil.ReadAll(resp.Body)
-    _ = json.Unmarshal(res, &modpacks)
-    for _, modp := range modpacks {
-	    modpacknames = append(modpacknames, modp.Name)
-	}
-    application := app.New()
-    application.SetIcon(resourceIconPng)
-    w := application.NewWindow("MRS Launcher")
-    w.SetContent(widget.NewHBox(
-        widget.NewVBox(
-            widget.NewSelect(modpacknames, func(item string) {
-                fmt.Println(item)
-            }),
-            widget.NewButton("Test", func() {
-                    w.SetFullScreen(!w.FullScreen())
-            })),
-        widget.NewLabel("Hello world"),
-        widget.NewButton("Quit", func() {
-            application.Quit()
-        }),
-    ))
+func newLauncher() *launcher {
+	c := &launcher{}
+	c.functions = make(map[string]func())
+	c.buttons = make(map[string]*widget.Button)
 
-    w.ShowAndRun()
+	return c
+}
+
+func (c *launcher) loadUI(app fyne.App) {
+	c.output = widget.NewLabel("Hello World!")
+	resp, _ := http.Get("https://api.mysticrs.tk/list")
+	var modpacks []modpack
+	modpacknames := make([]string, 0, 5)
+	res, _ := ioutil.ReadAll(resp.Body)
+	_ = json.Unmarshal(res, &modpacks)
+	for _, modp := range modpacks {
+		modpacknames = append(modpacknames, modp.Name)
+	}
+	c.modpacks = widget.NewSelect(modpacknames, func(s string) {
+		c.output.SetText(s)
+	})
+	c.window = app.NewWindow("MRS Launcher")
+	c.window.SetIcon(resourceIconPng)
+	c.window.SetContent(widget.NewVBox(c.output, c.modpacks))
+	c.window.ShowAndRun()
+}
+func main() {
+    application := app.New()
+	c := newLauncher()
+	c.loadUI(application)
 }
