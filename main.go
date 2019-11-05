@@ -2,6 +2,7 @@ package main
 
 import (
     "encoding/json"
+    "fmt"
     "fyne.io/fyne/app"
     "fyne.io/fyne/widget"
     "io/ioutil"
@@ -42,11 +43,10 @@ func main() {
     w.SetContent(widget.NewHBox(
         widget.NewVBox(
             widget.NewSelect(modpacknames, func(item string) {
-                widget.Box(w.Content()).Children[2].SetText(item)
+                fmt.Println(item)
             }),
             widget.NewButton("Test", func() {
                     w.SetFullScreen(!w.FullScreen())
-                }
             })),
         widget.NewLabel("Hello world"),
         widget.NewButton("Quit", func() {
