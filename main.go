@@ -4,6 +4,7 @@ import (
     "encoding/json"
     "fyne.io/fyne"
     "fyne.io/fyne/app"
+    "fyne.io/fyne/layout"
     "fyne.io/fyne/theme"
     "fyne.io/fyne/widget"
     "io/ioutil"
@@ -66,18 +67,15 @@ func (c *launcher) loadUI(app fyne.App) {
     })
     c.window = app.NewWindow("MRS Launcher")
     c.window.SetIcon(resourceIconPng)
-    c.window.SetContent(widget.NewHBox(
-        widget.NewVBox(
-            c.addButton("Home", func() {
-                c.window.SetFullScreen(!c.window.FullScreen())
-            }),
-            c.addButton("Modpacks", func() {
-                app.Settings().SetTheme(theme.LightTheme())
-            }),
-            c.addButton("Settings", func() {
-                app.Settings().SetTheme(theme.DarkTheme())
-            })),
-        widget.NewVBox(c.output, c.modpacks)))
+    c.window.SetContent(fyne.NewContainerWithLayout(layout.NewHBoxLayout(), fyne.NewContainerWithLayout(layout.NewVBoxLayout(), c.addButton("Home", func() {
+        c.window.SetFullScreen(!c.window.FullScreen())
+    }),
+        c.addButton("Modpacks", func() {
+            app.Settings().SetTheme(theme.LightTheme())
+        }),
+        c.addButton("Settings", func() {
+            app.Settings().SetTheme(theme.DarkTheme())
+        })), fyne.NewContainerWithLayout(layout.NewVBoxLayout(), widget.NewVBox(c.output, c.modpacks))))
     c.modpacks.SetSelected(modpacknames[0])
     c.window.ShowAndRun()
 }
