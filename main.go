@@ -37,6 +37,12 @@ func check(e error) {
     }
 }
 
+func getJson(url string, format interface{}) {
+    resp, _ := http.Get(url)
+    res, _ := ioutil.ReadAll(resp.Body)
+    _ = json.Unmarshal(res, &format)
+}
+
 func newLauncher() *launcher {
     c := &launcher{}
     c.functions = make(map[string]func())
@@ -54,11 +60,9 @@ func (c *launcher) addButton(text string, action func()) *widget.Button {
 
 func (c *launcher) loadUI(app fyne.App) {
     c.output = widget.NewLabel("Hello World!")
-    resp, _ := http.Get("https://api.mysticrs.tk/list")
     var modpacks []modpack
     modpacknames := make([]string, 0, 5)
-    res, _ := ioutil.ReadAll(resp.Body)
-    _ = json.Unmarshal(res, &modpacks)
+    getJson("https://api.mysticrs.tk/list", &modpacks)
     for _, modp := range modpacks {
         modpacknames = append(modpacknames, modp.Name)
     }
@@ -67,15 +71,27 @@ func (c *launcher) loadUI(app fyne.App) {
     })
     c.window = app.NewWindow("MRS Launcher")
     c.window.SetIcon(resourceIconPng)
-    c.window.SetContent(fyne.NewContainerWithLayout(layout.NewHBoxLayout(), fyne.NewContainerWithLayout(layout.NewVBoxLayout(), c.addButton("Home", func() {
-        c.window.SetFullScreen(!c.window.FullScreen())
-    }),
-        c.addButton("Modpacks", func() {
-            app.Settings().SetTheme(theme.LightTheme())
-        }),
-        c.addButton("Settings", func() {
-            app.Settings().SetTheme(theme.DarkTheme())
-        })), fyne.NewContainerWithLayout(layout.NewVBoxLayout(), widget.NewVBox(c.output, c.modpacks))))
+    c.window.SetContent(
+        fyne.NewContainerWithLayout(
+            layout.NewBorderLayout(
+                c.addButton("Home", func() {
+                    c.window.SetFullScreen(!c.window.FullScreen())
+                }),
+                c.addButton("Modpacks", func() {
+                    app.Settings().SetTheme(theme.LightTheme())
+                }),
+                c.addButton("Settings", func() {
+                    app.Settings().SetTheme(theme.DarkTheme())
+                }),
+                layout.NewSpacer(),
+            ),
+            fyne.NewContainerWithLayout(
+                layout.NewGridLayout(1),
+                c.modpacks,
+                c.output,
+            ),
+        ),
+    )
     c.modpacks.SetSelected(modpacknames[0])
     c.window.ShowAndRun()
 }
