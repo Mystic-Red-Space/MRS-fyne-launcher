@@ -74,17 +74,25 @@ func (c *launcher) loadUI(app fyne.App) {
     c.window.SetContent(
         fyne.NewContainerWithLayout(
             layout.NewBorderLayout(
-                c.addButton("Home", func() {
-                    c.window.SetFullScreen(!c.window.FullScreen())
-                }),
-                c.addButton("Modpacks", func() {
-                    app.Settings().SetTheme(theme.LightTheme())
-                }),
-                c.addButton("Settings", func() {
-                    app.Settings().SetTheme(theme.DarkTheme())
-                }),
-                layout.NewSpacer(),
+                nil,
+                nil,
+                fyne.NewContainerWithLayout(
+                    layout.NewGridLayout(1),
+                    c.addButton("Home", func() {
+                        c.window.SetFullScreen(!c.window.FullScreen())
+                    }),
+                    c.addButton("Modpacks", func() {
+                        app.Settings().SetTheme(theme.LightTheme())
+                    }),
+                    c.addButton("Settings", func() {
+                        app.Settings().SetTheme(theme.DarkTheme())
+                    }),
+                ),
+                nil,
             ),
+            c.buttons["Home"],
+            c.buttons["Modpacks"],
+            c.buttons["Settings"],
             fyne.NewContainerWithLayout(
                 layout.NewGridLayout(1),
                 c.modpacks,
