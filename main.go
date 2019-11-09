@@ -1,35 +1,19 @@
 package main
 
 import (
-	"encoding/json"
 	"fyne.io/fyne"
 	"fyne.io/fyne/app"
 	"fyne.io/fyne/layout"
-	"fyne.io/fyne/theme"
 	"fyne.io/fyne/widget"
-	"io/ioutil"
-	"net/http"
 )
 
 type launcher struct {
 	functions map[string]func()
-	modpacks  *widget.Select
-	output    *widget.Label
+	input     map[string]*widget.Entry
 	buttons   map[string]*widget.Button
 	window    fyne.Window
 }
-type mcfile struct {
-	Name string `json:"name"`
-	Dir  string `json:"dir"`
-	Url  string `json:"url"`
-	Md5  string `json:"md5"`
-}
 
-type modpack struct {
-	Name    string `json:"name"`
-	Icon    string `json:"icon"`
-	Profile string `json:"profile"`
-}
 
 func check(e error) {
 	if e != nil {
@@ -37,20 +21,24 @@ func check(e error) {
 	}
 }
 
-func getJson(url string, format interface{}) {
-	resp, _ := http.Get(url)
-	res, _ := ioutil.ReadAll(resp.Body)
-	_ = json.Unmarshal(res, &format)
-}
 
 func newLauncher() *launcher {
 	c := &launcher{}
 	c.functions = make(map[string]func())
 	c.buttons = make(map[string]*widget.Button)
+	c.input = make(map[string]*widget.Entry)
 
 	return c
 }
 
+func (c *launcher) addInput(text string, password bool) *widget.Entry {
+	input := widget.NewEntry()
+	input.Password = password
+	input.SetPlaceHolder(text)
+
+	c.input[text] = input
+	return input
+}
 func (c *launcher) addButton(text string, action func()) *widget.Button {
 	button := widget.NewButton(text, action)
 	c.buttons[text] = button
@@ -59,50 +47,20 @@ func (c *launcher) addButton(text string, action func()) *widget.Button {
 }
 
 func (c *launcher) loadUI(app fyne.App) {
-	c.output = widget.NewLabel("Hello World!")
 	var modpacks []modpack
 	modpacknames := make([]string, 0, 5)
 	getJson("https://api.mysticrs.tk/list", &modpacks)
 	for _, modp := range modpacks {
 		modpacknames = append(modpacknames, modp.Name)
 	}
-	c.modpacks = widget.NewSelect(modpacknames, func(s string) {
-		c.output.SetText(s)
-	})
 	c.window = app.NewWindow("MRS Launcher")
 	c.window.SetIcon(resourceIconPng)
-	c.addButton("Home", func() {
-		c.window.SetFullScreen(!c.window.FullScreen())
-	})
-	c.addButton("Modpacks", func() {
-		app.Settings().SetTheme(theme.LightTheme())
-	})
-	c.addButton("Settings", func() {
-		app.Settings().SetTheme(theme.DarkTheme())
-	})
-	sidebar := fyne.NewContainerWithLayout(
-		layout.NewGridLayout(1),
-		c.buttons["Home"],
-		c.buttons["Modpacks"],
-		c.buttons["Settings"],
-	)
-	c.window.SetContent(
-		fyne.NewContainerWithLayout(
-			layout.NewBorderLayout(
-				nil,
-				nil,
-				sidebar,
-				nil,
-			),
-			sidebar,
-			fyne.NewContainerWithLayout(
-				layout.NewGridLayout(1),
-				c.modpacks,
-				c.output,
-			),
-		),
-	)
-	c.modpacks.SetSelected(modpacknames[0])
+	c.window.SetContent(fyne.NewContainerWithLayout(layout.NewCenterLayout(), widget.NewVBox(
+		c.addInput("E-mail", false),
+		c.addInput("Password", true),
+		c.addButton("Login", func() {
+
+		}))))
 	c.window.ShowAndRun()
 }
 func main() {
