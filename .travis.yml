@@ -1,5 +1,5 @@
 language: go
-script: go build -v
+script: ./build.sh
 after_script: ls -al
 addons:
   apt:
