@@ -1,5 +1,5 @@
 language: go
-gobuild_args: -o MRS-fyne-launcher
+after_script: ls -al
 addons:
   apt:
     packages:
