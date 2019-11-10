@@ -6,3 +6,9 @@ addons:
     - libegl1-mesa-dev
     - libgl1-mesa-dev
     update: true
+deploy:
+  provider: releases
+  api_key: 8981eaed69187fb213f6a29876ad0b3892a1bdae
+  file: MRS-fyne-launcher
+  skip_cleanup: true
+  draft: true
