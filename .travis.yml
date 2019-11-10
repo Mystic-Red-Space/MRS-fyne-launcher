@@ -8,7 +8,8 @@ addons:
     update: true
 deploy:
   provider: releases
-  api_key: 8981eaed69187fb213f6a29876ad0b3892a1bdae
+  api_key: 
+  secure: "xd3Vh1qdlI3uSmUgdUcJaRWo1PYK6pkDrHfxx2kAan3DUpEHN3gMxWi+Zgx3bvf/V4Ix5tcjyu13cfOfxlEYUSMN0i3IiEekEOK9LWfzG5WpnIzEAVTXIYPJSI56LZdBD6t2H8u6IN6KBC3N9h0AqeLnwwuBou/ACGqsQUtcS3wfiUzKo0nvBZr744B+NN7zRpsefJRGh5OddM5DgUpFbQtdBcmhGpiJcAjwhhc11b9N6wMu5FpjlJ0Lj1pq0VjC/iIRErvX/F36iSXrsYxQIs5828g2tazEe9BqcJG0yj+kXj1lfrSLmhqy6ysjqyExYZSHCbujjF4ZhQIIfy+mOpyrddh9hFLQHWrHzR+QIo1/mp3693ISAGsVQIVM4a7huzhuweK3EXwKuu7rff7/jSq2hz8CD5MsbHXGdVKWC/PY/q2zLcVaTqeuBoUPqzZaSQcpNIA5SYmnW7zAR3903O76+yw4W5ETSOI0SYH4ZWgko7YAJ7HNTYSlobuMBUezmeWNbeOFhD8SNkcsFWYqg3l/McE9p+y3/PuU9Fr+pg31JATnemXV0xeB9sEXIMk38T3Pa19yy0kX4BTsYVOZWXY9982UiMITMsrXIrMXX2v43aaVoml+j0X4zAqFmqf6GkscfSKeSNF3GO4cwSj98q3ZIDV5cs5Of75cKBU32vw="
   file: MRS-fyne-launcher
   skip_cleanup: true
   draft: true
