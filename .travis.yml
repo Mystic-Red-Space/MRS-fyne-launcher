@@ -4,4 +4,5 @@ addons:
     packages:
     - xorg-dev
     - libegl1-mesa-dev
+    - libgl1-mesa-dev
     update: true
