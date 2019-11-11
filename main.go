@@ -3,6 +3,7 @@ package main
 import (
 	"fyne.io/fyne"
 	"fyne.io/fyne/app"
+	"fyne.io/fyne/dialog"
 	"fyne.io/fyne/layout"
 	"fyne.io/fyne/widget"
 )
@@ -13,9 +14,6 @@ type launcher struct {
 	buttons   map[string]*widget.Button
 	window    fyne.Window
 }
-
-
-
 
 func newLauncher() *launcher {
 	c := &launcher{}
@@ -44,7 +42,7 @@ func (c *launcher) addButton(text string, action func()) *widget.Button {
 func (c *launcher) loadUI(app fyne.App) {
 	var modpacks []modpack
 	modpacknames := make([]string, 0, 5)
-    getJson("https://api.mysticrs.tk/list", &modpacks)
+	getJson("https://api.mysticrs.tk/list", &modpacks)
 	for _, modp := range modpacks {
 		modpacknames = append(modpacknames, modp.Name)
 	}
@@ -54,7 +52,12 @@ func (c *launcher) loadUI(app fyne.App) {
 		c.addInput("E-mail", false),
 		c.addInput("Password", true),
 		c.addButton("Login", func() {
-
+			auth, err := mclogin(c.input["E-mail"].Text, c.input["Password"].Text)
+			if err == nil {
+				dialog.ShowInformation(auth.SelectedProfile.Name, auth.User.ID, c.window)
+			} else {
+				dialog.ShowInformation(err.Error, err.Cause+"\n"+err.ErrorMessage, c.window)
+			}
 		}))))
 	c.window.ShowAndRun()
 }

@@ -8,3 +8,4 @@ output/
 /MRS-fyne-launcher
 /build_release.bat
 /go_build_MRS_fyne_launcher_.exe
+/clientToken.txt
