@@ -15,11 +15,6 @@ type launcher struct {
 }
 
 
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
 
 
 func newLauncher() *launcher {
@@ -49,7 +44,7 @@ func (c *launcher) addButton(text string, action func()) *widget.Button {
 func (c *launcher) loadUI(app fyne.App) {
 	var modpacks []modpack
 	modpacknames := make([]string, 0, 5)
-	getJson("https://api.mysticrs.tk/list", &modpacks)
+	GetJson("https://api.mysticrs.tk/list", &modpacks)
 	for _, modp := range modpacks {
 		modpacknames = append(modpacknames, modp.Name)
 	}
