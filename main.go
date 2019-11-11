@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"fyne.io/fyne"
 	"fyne.io/fyne/app"
 	"fyne.io/fyne/dialog"
@@ -54,8 +55,10 @@ func (c *launcher) loadUI(app fyne.App) {
 		c.addButton("Login", func() {
 			auth, err := mclogin(c.input["E-mail"].Text, c.input["Password"].Text)
 			if err == nil {
+				fmt.Println("우와!")
 				dialog.ShowInformation(auth.SelectedProfile.Name, auth.User.ID, c.window)
 			} else {
+				fmt.Println("에러!")
 				dialog.ShowInformation(err.Error, err.Cause+"\n"+err.ErrorMessage, c.window)
 			}
 		}))))
