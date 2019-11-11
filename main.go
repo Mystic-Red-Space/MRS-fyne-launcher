@@ -44,7 +44,7 @@ func (c *launcher) addButton(text string, action func()) *widget.Button {
 func (c *launcher) loadUI(app fyne.App) {
 	var modpacks []modpack
 	modpacknames := make([]string, 0, 5)
-	GetJson("https://api.mysticrs.tk/list", &modpacks)
+    getJson("https://api.mysticrs.tk/list", &modpacks)
 	for _, modp := range modpacks {
 		modpacknames = append(modpacknames, modp.Name)
 	}

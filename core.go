@@ -1,12 +1,21 @@
 package main
 
 import (
-    "bytes"
     "encoding/json"
-    "fmt"
+    "github.com/JoshuaDoes/go-yggdrasil"
+    "github.com/google/uuid"
     "io/ioutil"
     "net/http"
+    "os"
 )
+
+func fileExists(filename string) bool {
+    info, err := os.Stat(filename)
+    if os.IsNotExist(err) {
+        return false
+    }
+    return !info.IsDir()
+}
 
 type mcfile struct {
     Name string `json:"name"`
@@ -21,56 +30,30 @@ func check(e error) {
     }
 }
 
-type Agent struct {
-    Name    string `json:"name"`
-    Version int    `json:"version"`
-}
-
-func NewAgent() Agent {
-    newagent := Agent{}
-    newagent.Name = "Minecraft"
-    newagent.Version = 1
-    return newagent
-}
-
-type LoginPayload struct {
-    Agent       Agent  `json:"agent"`
-    Username    string `json:"username"`
-    Password    string `json:"password"`
-    RequestUser bool   `json:"requestUser"`
-}
-
-func NewLoginPayload(id string, pass string) LoginPayload {
-    newloginpayload := LoginPayload{}
-    newloginpayload.Agent = NewAgent()
-    newloginpayload.Username = id
-    newloginpayload.Password = pass
-    newloginpayload.RequestUser = true
-    return newloginpayload
-}
-
 type modpack struct {
     Name    string `json:"name"`
     Icon    string `json:"icon"`
     Profile string `json:"profile"`
 }
 
-func GetJson(url string, format interface{}) {
+func getJson(url string, format interface{}) {
     resp, _ := http.Get(url)
     res, _ := ioutil.ReadAll(resp.Body)
     _ = json.Unmarshal(res, &format)
 }
 
-func McLogin(id string, password string) {
-    payload := NewLoginPayload(id, password)
-    request, _ := json.Marshal(payload)
-    buff := bytes.NewBuffer(request)
-    resp, err := http.Post("https://authserver.mojang.com/authenticate", "application/json", buff)
-    check(err)
-    responce, _ := ioutil.ReadAll(resp.Body)
-    fmt.Println(string(responce))
-}
-
-func main() {
-    McLogin("doohee006@gmail.com", "dhdh4321@@!!")
+func mclogin(id string, pass string) {
+    var authClient *yggdrasil.Client
+    if fileExists("clientToken.txt") {
+        tokenFile, _ := ioutil.ReadFile("clientToken.txt")
+        authClient = &yggdrasil.Client{ClientToken: string(tokenFile)}
+    } else {
+        tokenFile, _ := os.Create("clientToken.txt")
+        clientToken := uuid.New()
+        _, _ = tokenFile.WriteString(clientToken.String())
+        tokenFile.Close()
+        authClient = &yggdrasil.Client{ClientToken: clientToken.String()}
+    }
+    resp, err := authClient.Authenticate(id, pass, "Minecraft", 1)
+    return resp, err
 }
