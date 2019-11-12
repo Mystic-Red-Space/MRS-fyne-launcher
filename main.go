@@ -59,9 +59,14 @@ func (c *launcher) loadUI(app fyne.App) {
 				dialog.ShowInformation(auth.SelectedProfile.Name, auth.User.ID, c.window)
 			} else {
 				fmt.Println("에러!")
-				dialog.ShowInformation(err.Error, err.Cause+"\n"+err.ErrorMessage, c.window)
+				dialog.ShowInformation(err.Error, err.Error+"\n"+err.ErrorMessage, c.window)
 			}
 		}))))
+	c.window.CenterOnScreen()
+	c.window.Resize(fyne.Size{
+		Width:  1024,
+		Height: 720,
+	})
 	c.window.ShowAndRun()
 }
 func main() {
